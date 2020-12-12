@@ -6,8 +6,8 @@
   <xacro:property name="PI" value="3.1415926535897931"/>
   <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
   <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
-  <xacro:property name="height1" value="2" /> <!-- Link 1 -->
-  <xacro:property name="height2" value="5" /> <!-- Link 2 -->
+  <xacro:property name="height1" value="0.6" /> <!-- Link 1 -->
+  <!--<xacro:property name="height2" value="5" /> Link 2 -->
   <xacro:property name="height3" value="1" /> <!-- Link 3 -->
   <xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
   <xacro:property name="axel_offset" value="0.05" /> <!-- Space btw top of beam and the each joint -->
@@ -54,22 +54,22 @@
 
   <joint name="joint1" type="fixed">
     <parent link="link1"/>
-    <child link="link2"/>
-    <origin xyz="0 ${width} ${height1 - axel_offset}" rpy="0 1.5 0"/>
+    <child link="link3"/>
+    <origin xyz="0 ${width} ${height1 - axel_offset}" rpy="0 1.5708 0"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.7"/>
   </joint>
 
   <!-- Middle Link -->
-  <link name="link2">
+ <!--  <link name="link2">
     <collision>
       <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
       <geometry>
 	<box size="${width} ${width} ${height2}"/>
       </geometry>
-    </collision>
+    </collision> -->
 
-    <visual>
+    <!-- <visual>
       <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
       <geometry>
 	<box size="${width} ${width} ${height2}"/>
@@ -85,15 +85,15 @@
 	  iyy="${mass / 12.0 * (height2*height2 + width*width)}" iyz="0.0"
 	  izz="${mass / 12.0 * (width*width + width*width)}"/>
     </inertial>
-  </link>
+  </link> -->
 
-  <joint name="joint2" type="fixed">
+ <!--  <joint name="joint2" type="fixed">
     <parent link="link2"/>
     <child link="link3"/>
     <origin xyz="0 ${width} ${height2 - axel_offset*2}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.7"/>
-  </joint>
+  </joint> -->
 
   <!-- Top Link -->
   <link name="link3">

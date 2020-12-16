@@ -26,6 +26,12 @@
     args="-urdf -model rrbot -param robot_description"/>
 
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find rrbot_gazebo)/rviz/config_file.rviz" />
+  
+  <!-- convert joint states to TF transforms for rviz-->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+	  respawn="false" output="screen">
+    <remap from="/joint_states" to="/rrbot/joint_states" />
+  </node>
   <!-- ros_control rrbot launch file -->
   <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->
 

@@ -25,7 +25,14 @@ catkin_package(
 )
 
 add_library(${PROJECT_NAME} src/model_push.cpp)
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+target_link_libraries(
+  ${PROJECT_NAME} 
+  ${catkin_LIBRARIES} 
+  ${GAZEBO_LIBRARIES}
+)
+
+add_executable(conveyor_tf2_broadcast src/conveyor_tf2_broadcast.cpp)
+target_link_libraries(conveyor_tf2_broadcast ${catkin_LIBRARIES})
 # target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 # install(TARGETS ${PROJECT_NAME}

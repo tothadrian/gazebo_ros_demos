@@ -32,6 +32,10 @@
 	  respawn="false" output="screen">
     <remap from="/joint_states" to="/rrbot/joint_states" />
   </node>
+
+ <node pkg="rrbot_gazebo" type="conveyor_tf2_broadcast"
+          name="conveyor_frame" />
+
   <!-- ros_control rrbot launch file -->
   <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->
 

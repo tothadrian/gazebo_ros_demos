@@ -36,6 +36,16 @@
  <node pkg="rrbot_gazebo" type="conveyor_tf2_broadcast"
           name="conveyor_frame" />
 
+  <node type="laser_scan_assembler" pkg="laser_assembler"
+        name="my_assembler">
+    <remap from="scan" to="rrbot/laser/scan"/>
+    <param name="max_scans" type="int" value="4000" />
+    <param name="fixed_frame" type="string" value="conveyor" />
+  </node>
+
+  <node pkg="rrbot_gazebo" type="periodic_snapshotter"
+          name="periodic_snapshotter" />
+
   <!-- ros_control rrbot launch file -->
   <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->
 

@@ -33,6 +33,9 @@ target_link_libraries(
 
 add_executable(conveyor_tf2_broadcast src/conveyor_tf2_broadcast.cpp)
 target_link_libraries(conveyor_tf2_broadcast ${catkin_LIBRARIES})
+
+add_executable(periodic_snapshotter src/periodic_snapshotter.cpp)
+target_link_libraries(periodic_snapshotter ${catkin_LIBRARIES})
 # target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 # install(TARGETS ${PROJECT_NAME}

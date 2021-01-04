@@ -2,10 +2,13 @@
 #include <ros/ros.h>
 
 // Services
-#include "laser_assembler/AssembleScans.h"
+#include "laser_assembler/AssembleScans2.h"
 
 // Messages
 #include "sensor_msgs/PointCloud.h"
+
+//Conversion
+#include <sensor_msgs/point_cloud_conversion.h>
 
 
 /***
@@ -24,10 +27,10 @@ public:
   PeriodicSnapshotter()
   {
     // Create a publisher for the clouds that we assemble
-    pub_ = n_.advertise<sensor_msgs::PointCloud> ("assembled_cloud", 1);
+    pub_ = n_.advertise<sensor_msgs::PointCloud2> ("assembled_cloud", 1);
 
     // Create the service client for calling the assembler
-    client_ = n_.serviceClient<AssembleScans>("assemble_scans");
+    client_ = n_.serviceClient<AssembleScans2>("assemble_scans2");
 
     // Start the timer that will trigger the processing loop (timerCallback)
     timer_ = n_.createTimer(ros::Duration(1,0), &PeriodicSnapshotter::timerCallback, this);
@@ -48,14 +51,16 @@ public:
     }
 
     // Populate our service request based on our timer callback times
-    AssembleScans srv;
+    AssembleScans2 srv;
+    sensor_msgs::PointCloud2 cloud2;
     srv.request.begin = ros::Time(0,0);
     srv.request.end   = timer_ev.current_real;
 
     // Make the service call
     if (client_.call(srv))
     {
-      ROS_INFO("Published Cloud with %u points", (uint32_t)(srv.response.cloud.points.size())) ;
+      ROS_INFO("Published Cloud with %u points", (uint32_t)(srv.response.cloud.width)) ;
+      //sensor_msgs::convertPointCloudToPointCloud2(srv.response.cloud,cloud2);
       pub_.publish(srv.response.cloud);
     }
     else

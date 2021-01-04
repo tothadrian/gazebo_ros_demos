@@ -46,6 +46,9 @@
   <node pkg="rrbot_gazebo" type="periodic_snapshotter"
           name="periodic_snapshotter" />
 
+  <node pkg="rrbot_gazebo" type="pcl_filter"
+          name="pcl_filter" />          
+
   <!-- ros_control rrbot launch file -->
   <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->
 

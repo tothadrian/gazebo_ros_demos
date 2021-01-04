@@ -8,7 +8,7 @@ Panels:
         - /Status1
         - /Camera1
         - /LaserScan1
-        - /PointCloud1
+        - /PointCloud21
       Splitter Ratio: 0.5
     Tree Height: 355
   - Class: rviz/Selection
@@ -68,7 +68,7 @@ Visualization Manager:
       Visibility:
         Grid: true
         LaserScan: true
-        PointCloud: true
+        PointCloud2: true
         Value: true
       Zoom Factor: 1
     - Alpha: 1
@@ -109,7 +109,7 @@ Visualization Manager:
         Value: true
       Axis: Z
       Channel Name: intensity
-      Class: rviz/PointCloud
+      Class: rviz/PointCloud2
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
@@ -119,7 +119,7 @@ Visualization Manager:
       Max Intensity: 0
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: PointCloud
+      Name: PointCloud2
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -159,7 +159,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 8.883804321289062
+      Distance: 7.599999904632568
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -167,17 +167,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.6528556942939758
-        Y: -0.19055470824241638
-        Z: -0.32689642906188965
-      Focal Shape Fixed Size: true
+        X: 0
+        Y: 0
+        Z: 0
+      Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.785398006439209
+      Pitch: 0.7853981852531433
       Target Frame: <Fixed Frame>
-      Yaw: 0.785398006439209
+      Yaw: 0.7853981852531433
     Saved: ~
 Window Geometry:
   Camera:

@@ -10,8 +10,8 @@ int main(int argc, char** argv){
   geometry_msgs::TransformStamped transformStamped;
 
   ros::Time start_time = ros::Time::now();
-  transformStamped.header.frame_id = "link1";
-  transformStamped.child_frame_id = "conveyor";
+  transformStamped.header.frame_id = "base_link";
+  transformStamped.child_frame_id = "conveyor_reference";
   transformStamped.transform.translation.x = 0.0;
   transformStamped.transform.translation.y = 0.0;
   transformStamped.transform.translation.z = 0.0;

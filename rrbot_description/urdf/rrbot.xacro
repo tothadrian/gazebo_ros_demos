@@ -22,11 +22,11 @@
 
   <joint name="fixed" type="fixed">
     <parent link="world"/>
-    <child link="link1"/>
+    <child link="base_link"/>
   </joint>
 
   <!-- Base Link -->
-  <link name="link1">
+  <link name="base_link">
     <collision>
       <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
       <geometry>
@@ -53,7 +53,7 @@
   </link>
 
   <joint name="joint1" type="continuous">
-    <parent link="link1"/>
+    <parent link="base_link"/>
     <child link="link2"/>
     <origin xyz="0 ${width} ${height1 - axel_offset}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>

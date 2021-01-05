@@ -18,7 +18,7 @@
       <robotNamespace>/rrbot</robotNamespace>
     </plugin>
   </gazebo>
-  <gazebo reference="link1">
+  <gazebo reference="base_link">
     <material>Gazebo/Orange</material>
   </gazebo>
   <gazebo reference="link2">
@@ -139,10 +139,10 @@
   <link name="world"/>
   <joint name="fixed" type="fixed">
     <parent link="world"/>
-    <child link="link1"/>
+    <child link="base_link"/>
   </joint>
   <!-- Base Link -->
-  <link name="link1">
+  <link name="base_link">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 1.0"/>
       <geometry>
@@ -163,7 +163,7 @@
     </inertial>
   </link>
   <joint name="joint1" type="continuous">
-    <parent link="link1"/>
+    <parent link="base_link"/>
     <child link="link2"/>
     <origin rpy="0 0 0" xyz="0 0.1 1.95"/>
     <axis xyz="0 1 0"/>
@@ -303,8 +303,8 @@
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
   </gazebo>
-  <!-- Link1 -->
-  <gazebo reference="link1">
+  <!-- base_link -->
+  <gazebo reference="base_link">
     <material>Gazebo/Orange</material>
   </gazebo>
   <!-- Link2 -->
@@ -436,10 +436,10 @@
   <link name="world"/>
   <joint name="fixed" type="fixed">
     <parent link="world"/>
-    <child link="link1"/>
+    <child link="base_link"/>
   </joint>
   <!-- Base Link -->
-  <link name="link1">
+  <link name="base_link">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 1.0"/>
       <geometry>
@@ -460,7 +460,7 @@
     </inertial>
   </link>
   <joint name="joint1" type="continuous">
-    <parent link="link1"/>
+    <parent link="base_link"/>
     <child link="link2"/>
     <origin rpy="0 0 0" xyz="0 0.1 1.95"/>
     <axis xyz="0 1 0"/>

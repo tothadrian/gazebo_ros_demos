@@ -9,8 +9,8 @@
     </plugin>
   </gazebo>
 
-  <!-- Link1 -->
-  <gazebo reference="link1">
+  <!-- base_link -->
+  <gazebo reference="base_link">
     <material>Gazebo/Orange</material>
   </gazebo>
 

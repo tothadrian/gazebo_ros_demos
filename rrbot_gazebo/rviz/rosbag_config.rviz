@@ -7,7 +7,6 @@ Panels:
         - /Global Options1
         - /Status1
         - /LaserScan1
-        - /LaserScan1/Status1
         - /PointCloud21
         - /PointCloud22
         - /TF1
@@ -32,7 +31,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -153,60 +152,6 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        BLUE:
-          Value: true
-        GREEN:
-          Value: true
-        ORANGE:
-          Value: true
-        RED:
-          Value: true
-        YELLOW:
-          Value: true
-        base:
-          Value: true
-        base_link:
-          Value: true
-        box_1:
-          Value: true
-        box_2:
-          Value: true
-        box_3:
-          Value: true
-        box_4:
-          Value: true
-        box_5:
-          Value: true
-        box_end:
-          Value: true
-        camera:
-          Value: true
-        conveyor_belt:
-          Value: true
-        conveyor_reference:
-          Value: true
-        laser:
-          Value: true
-        link_6:
-          Value: true
-        table:
-          Value: true
-        target_1:
-          Value: true
-        target_2:
-          Value: true
-        tool0:
-          Value: true
-        vacuum:
-          Value: true
-        waiting_pose:
-          Value: true
-        workspace_max:
-          Value: true
-        workspace_min:
-          Value: true
-        world:
-          Value: true
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -214,27 +159,7 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        world:
-          base_link:
-            base:
-              {}
-          box_1:
-            box_2:
-              box_3:
-                {}
-            box_4:
-              box_5:
-                {}
-          box_end:
-            {}
-          camera:
-            {}
-          conveyor_belt:
-            {}
-          laser:
-            {}
-          table:
-            {}
+        {}
       Update Interval: 0
       Value: true
     - Class: rviz/Image

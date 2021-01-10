@@ -11,7 +11,7 @@
 
 ros::Publisher pub;
 
-void process_cloud (const pcl::PCLPointCloud2ConstPtr& cloud)
+void process_cloud (const pcl::PCLPointCloud2ConstPtr& cloud, std::string source_frame, std::string target_frame, double max_dist)
 {
     // create node for listening to transform between base_link and conveyor_reference
   tf2_ros::Buffer tfBuffer;
@@ -23,13 +23,13 @@ void process_cloud (const pcl::PCLPointCloud2ConstPtr& cloud)
   while (!success){
     
     try{
-      transformStamped = tfBuffer.lookupTransform("base_link", "conveyor_reference", ros::Time(0));
+      transformStamped = tfBuffer.lookupTransform(source_frame, target_frame, ros::Time(0));
       success=true;
     }
     catch (tf2::TransformException &ex) {
-      ROS_WARN("%s",ex.what());
+      // ROS_WARN("%s",ex.what());
       success=false;
-      ros::Duration(1.0).sleep();
+      ros::Duration(0.1).sleep();
       continue;
     }
   }
@@ -39,7 +39,7 @@ void process_cloud (const pcl::PCLPointCloud2ConstPtr& cloud)
   pcl::PassThrough<pcl::PCLPointCloud2> pass;
   pass.setInputCloud (cloud);
   pass.setFilterFieldName ("y");
-  pass.setFilterLimits (0.0-transformStamped.transform.translation.y, 2.0-transformStamped.transform.translation.y);
+  pass.setFilterLimits (0.0-transformStamped.transform.translation.y, max_dist-transformStamped.transform.translation.y);
   pcl::PCLPointCloud2* pass_filter_output=new pcl::PCLPointCloud2;
   pass.filter (*pass_filter_output);
 
@@ -47,7 +47,7 @@ void process_cloud (const pcl::PCLPointCloud2ConstPtr& cloud)
   pcl::PCLPointCloud2ConstPtr cloudPtr(pass_filter_output);
   voxelGrid.setInputCloud(cloudPtr);
   // set the leaf size (x, y, z)
-  voxelGrid.setLeafSize(0.01, 0.01, 0.01);
+  voxelGrid.setLeafSize(0.03, 0.03, 0.03);
   // apply the filter to dereferenced cloudVoxel
   pcl::PCLPointCloud2 filtered_pc;
   voxelGrid.filter(filtered_pc);
@@ -62,9 +62,13 @@ int main (int argc, char** argv)
   ros::init (argc, argv, "pcl_filter");
   ros::NodeHandle nh;
   std::cout << "Process_pointcloud node initialised" << std::endl;
-
+  std::string source_frame, target_frame;
+  double max_dist;
+  nh.param("pcl_filter/max_dist", max_dist, 2.0);
+  nh.param<std::string>("pcl_filter/source_frame", source_frame, "base_link");
+  nh.param<std::string>("pcl_filter/target_frame", target_frame, "conveyor_reference");
   // Create a ROS subscriber for the input point cloud
-  ros::Subscriber sub = nh.subscribe("assembled_cloud", 1, process_cloud);
+  ros::Subscriber sub = nh.subscribe<pcl::PCLPointCloud2>("assembled_cloud", 1, boost::bind(process_cloud, _1, source_frame, target_frame, max_dist));
 
   // Create a ROS publisher for the output point cloud
   pub = nh.advertise<pcl::PCLPointCloud2> ("filtered_pc", 1);

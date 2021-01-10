@@ -1,0 +1,40 @@
+<launch>
+
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <!--start RVIZ-->
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find rrbot_gazebo)/rviz/rosbag_config.rviz" />
+          
+  <!--assembles scans in a rolling buffer without publishing it-->
+  <node type="laser_scan_assembler" pkg="laser_assembler"
+        name="my_assembler">
+    
+    <param name="max_scans" type="int" value="4000" />
+    <param name="fixed_frame" type="string" value="conveyor_reference" />
+  </node>
+
+  <!--this node calls the assemble_scans2 service after every "duration" and publishes a sensor_msgs/pointcloud2 to assembled_cloud-->
+  <node pkg="rrbot_gazebo" type="periodic_snapshotter"
+          name="periodic_snapshotter" >
+    <param name="duration" type="double" value="0.1" />
+  </node>
+
+  <!--converts a sensor_msgs/poinctcloud2 to pcl::PCLPointCloud2 and filters it-->
+  <node pkg="rrbot_gazebo" type="pcl_filter"
+          name="pcl_filter"
+          output="screen" >
+    <param name="frequency" type="int" value="10" />
+    <param name="source_frame" type="string" value="base_link" />
+    <param name="target_frame" type="string" value="conveyor_reference" />
+    <param name="max_dist" type="double" value="2.0" />
+  </node>          
+
+  <!-- ros_control rrbot launch file -->
+  <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->
+
+</launch>

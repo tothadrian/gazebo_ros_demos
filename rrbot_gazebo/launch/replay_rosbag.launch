@@ -7,6 +7,8 @@
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
 
+  <node pkg="rosbag" type="play" name="player" output="screen" args="--clock /home/adrian/FZI/Aufzeichnungen/wooden_objects_02.bag"/>
+
   <!--start RVIZ-->
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find rrbot_gazebo)/rviz/rosbag_config.rviz" />
           

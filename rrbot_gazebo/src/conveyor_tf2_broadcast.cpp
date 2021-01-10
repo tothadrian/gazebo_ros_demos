@@ -3,15 +3,18 @@
 #include <tf2/LinearMath/Quaternion.h>
 
 int main(int argc, char** argv){
-  ros::init(argc, argv, "my_tf2_broadcaster");
+  ros::init(argc, argv, "create_conveyor_frame");
   ros::NodeHandle node;
-
-   tf2_ros::TransformBroadcaster tfb;
+  std::string frame_name;
+  node.param<std::string>("create_conveyor_frame/frame_name", frame_name, "conveyor_reference");
+  double velocity;
+  node.param("create_conveyor_frame/velocity", velocity, 0.1);
+  tf2_ros::TransformBroadcaster tfb;
   geometry_msgs::TransformStamped transformStamped;
 
   ros::Time start_time = ros::Time::now();
   transformStamped.header.frame_id = "base_link";
-  transformStamped.child_frame_id = "conveyor_reference";
+  transformStamped.child_frame_id = frame_name;
   transformStamped.transform.translation.x = 0.0;
   transformStamped.transform.translation.y = 0.0;
   transformStamped.transform.translation.z = 0.0;
@@ -26,7 +29,7 @@ int main(int argc, char** argv){
   while (node.ok()){
     ros::Duration delta_t = ros::Time::now() - start_time;
     double delta_t_sec = delta_t.toSec();
-    transformStamped.transform.translation.y = 0.1*delta_t_sec;
+    transformStamped.transform.translation.y = velocity*delta_t_sec;
     transformStamped.header.stamp = ros::Time::now();
     tfb.sendTransform(transformStamped);
     rate.sleep();

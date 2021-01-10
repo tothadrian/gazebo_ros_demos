@@ -24,7 +24,7 @@ class PeriodicSnapshotter
 
 public:
 
-  PeriodicSnapshotter()
+  PeriodicSnapshotter(double snap_duration)
   {
     // Create a publisher for the clouds that we assemble
     pub_ = n_.advertise<sensor_msgs::PointCloud2> ("assembled_cloud", 1);
@@ -33,7 +33,7 @@ public:
     client_ = n_.serviceClient<AssembleScans2>("assemble_scans2");
 
     // Start the timer that will trigger the processing loop (timerCallback)
-    timer_ = n_.createTimer(ros::Duration(1,0), &PeriodicSnapshotter::timerCallback, this);
+    timer_ = n_.createTimer(ros::Duration(snap_duration), &PeriodicSnapshotter::timerCallback, this);
 
     // Need to track if we've called the timerCallback at least once
     first_time_ = true;
@@ -88,7 +88,9 @@ int main(int argc, char **argv)
   ROS_INFO("Waiting for [build_cloud] to be advertised");
   ros::service::waitForService("build_cloud");
   ROS_INFO("Found build_cloud! Starting the snapshotter");
-  PeriodicSnapshotter snapshotter;
+  double duration;
+  n.param("periodic_snapshotter/duration", duration, 1.0);
+  PeriodicSnapshotter snapshotter(duration);
   ros::spin();
   return 0;
 }

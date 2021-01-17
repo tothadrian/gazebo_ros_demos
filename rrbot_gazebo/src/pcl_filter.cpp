@@ -47,7 +47,7 @@ void process_cloud (const pcl::PCLPointCloud2ConstPtr& cloud, std::string source
   pcl::PCLPointCloud2ConstPtr cloudPtr(pass_filter_output);
   voxelGrid.setInputCloud(cloudPtr);
   // set the leaf size (x, y, z)
-  voxelGrid.setLeafSize(0.03, 0.03, 0.03);
+  voxelGrid.setLeafSize(0.01, 0.01, 0.01);
   // apply the filter to dereferenced cloudVoxel
   pcl::PCLPointCloud2 filtered_pc;
   voxelGrid.filter(filtered_pc);

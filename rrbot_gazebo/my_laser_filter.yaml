@@ -1,0 +1,34 @@
+scan_filter_chain:
+- type: laser_filters/LaserArrayFilter
+  name: laser_median_filter
+  params:
+    range_filter_chain:
+      - name: median_5
+        type: filters/MultiChannelMedianFilterFloat
+        params:
+          number_of_observations: 20
+          unused: 20
+    intensity_filter_chain:
+      - name: median_5
+        type: filters/MultiChannelMedianFilterFloat
+        params:
+          number_of_observations: 3
+          unused: 6
+- name: box
+  type: laser_filters/LaserScanBoxFilter
+  params:
+    box_frame: conveyor_reference
+    min_x: -.inf
+    max_x: .inf
+    min_y: -.inf
+    max_y: .inf
+    min_z: -.inf
+    max_z: 0.02
+
+- name: speckle_filter
+  type: laser_filters/LaserScanSpeckleFilter
+  params:
+    filter_type: 0
+    max_range: 1.0
+    max_range_difference: 0.01
+    filter_window: 2

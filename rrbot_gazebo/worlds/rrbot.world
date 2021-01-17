@@ -12,15 +12,42 @@
       <uri>model://sun</uri>
     </include>
 
-    <include>
-      <uri>model://coke_can</uri>
-      <name>coke_can1</name>
-      <pose>0.8 -1 0 -1.5708 0 0</pose>
+
+<model name="cylinder1">
+      <pose>0.6 -0.3 0 1.5708 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <length>0.1</length>
+              <radius>0.03</radius>
+            </cylinder>
+          </geometry>
+                <surface>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <length>0.1</length>
+              <radius>0.03</radius>
+            </cylinder>
+          </geometry>
+        </visual>
+      </link>
+
       <plugin name="model_push" filename="librrbot_gazebo.so"/>
-    </include>
+    </model>
 
     <model name="box1">
-      <pose>0.8 -0.3 0 0 0 0</pose>
+      <pose>0.6 -0.1 0 0 0 0</pose>
       <link name="link">
         <collision name="collision">
           <geometry>
@@ -42,6 +69,37 @@
           <geometry>
             <box>
               <size>.05 .1 .05</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+
+      <plugin name="model_push" filename="librrbot_gazebo.so"/>
+    </model>  
+
+    <model name="box2">
+      <pose>0.6 -0.5 0 0 0 0.6</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.1 .2 .05</size>
+            </box>
+          </geometry>
+                <surface>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.1 .2 .05</size>
             </box>
           </geometry>
         </visual>

@@ -25,7 +25,7 @@ int main(int argc, char** argv){
   transformStamped.transform.rotation.z = q.z();
   transformStamped.transform.rotation.w = q.w();
 
-  ros::Rate rate(10.0);
+  ros::Rate rate(50.0);
   while (node.ok()){
     ros::Duration delta_t = ros::Time::now() - start_time;
     double delta_t_sec = delta_t.toSec();

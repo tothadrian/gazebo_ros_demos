@@ -38,14 +38,20 @@
  <node pkg="rrbot_gazebo" type="conveyor_tf2_broadcast"
           name="create_conveyor_frame" >
     <param name="frame_name" type="string" value="conveyor_reference" />
-    <param name="velocity" type="double" value="0.1" /> <!--velocity of the objects has to be set in the model_push.cpp file-->
+    <param name="velocity" type="double" value="0.02" /> <!--velocity of the objects has to be set in the model_push.cpp file-->
   </node>
-          
+
+  <!--median filtering and removing points of conveyor belt-->        
+  <node pkg="laser_filters" type="scan_to_scan_filter_chain"
+      name="laser_filter" output="screen">
+    <rosparam command="load" file="$(find rrbot_gazebo)/my_laser_filter.yaml" />
+    <remap from="scan" to="rrbot/laser/scan" />      
+  </node>
 
   <!--assembles scans in a rolling buffer without publishing it-->
   <node type="laser_scan_assembler" pkg="laser_assembler"
         name="my_assembler">
-    <remap from="scan" to="rrbot/laser/scan"/>
+    <remap from="scan" to="scan_filtered"/>
     <param name="max_scans" type="int" value="4000" />
     <param name="fixed_frame" type="string" value="conveyor_reference" />
   </node>

@@ -7,15 +7,22 @@
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
 
-  <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -l /home/adrian/FZI/Aufzeichnungen/output.bag"/>
+  <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -l /home/adrian/FZI/Aufzeichnungen/wooden_objects_02.bag"/>
 
   <!--start RVIZ-->
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find rrbot_gazebo)/rviz/rosbag_config.rviz" />
-          
+
+  <!--median filtering and removing points of conveyor belt-->        
+  <node pkg="laser_filters" type="scan_to_scan_filter_chain"
+      name="laser_filter" output="screen">
+    <rosparam command="load" file="$(find rrbot_gazebo)/my_laser_filter.yaml" />
+    <!--<remap from="scan" to="rrbot/laser/scan" />     --> 
+  </node>   
+
   <!--assembles scans in a rolling buffer without publishing it-->
   <node type="laser_scan_assembler" pkg="laser_assembler"
         name="my_assembler">
-    
+    <remap from="scan" to="scan_filtered"/>
     <param name="max_scans" type="int" value="4000" />
     <param name="fixed_frame" type="string" value="conveyor_reference" />
   </node>

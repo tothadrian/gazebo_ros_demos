@@ -23,7 +23,7 @@ scan_filter_chain:
     min_y: -.inf
     max_y: .inf
     min_z: -.inf
-    max_z: 0.02
+    max_z: 0.01
 
 - name: speckle_filter
   type: laser_filters/LaserScanSpeckleFilter

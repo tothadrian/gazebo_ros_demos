@@ -13,13 +13,13 @@ int main(int argc, char** argv){
   geometry_msgs::TransformStamped transformStamped;
 
   ros::Time start_time = ros::Time::now();
-  transformStamped.header.frame_id = "base_link";
+  transformStamped.header.frame_id = "hokuyo_link";
   transformStamped.child_frame_id = frame_name;
-  transformStamped.transform.translation.x = 0.0;
+  transformStamped.transform.translation.x = 0.5;
   transformStamped.transform.translation.y = 0.0;
   transformStamped.transform.translation.z = 0.0;
   tf2::Quaternion q;
-        q.setRPY(0, 0, 0);
+        q.setRPY(0, -1.5708, 0);
   transformStamped.transform.rotation.x = q.x();
   transformStamped.transform.rotation.y = q.y();
   transformStamped.transform.rotation.z = q.z();
@@ -29,7 +29,7 @@ int main(int argc, char** argv){
   while (node.ok()){
     ros::Duration delta_t = ros::Time::now() - start_time;
     double delta_t_sec = delta_t.toSec();
-    transformStamped.transform.translation.y = velocity*delta_t_sec;
+    transformStamped.transform.translation.z = -velocity*delta_t_sec;
     transformStamped.header.stamp = ros::Time::now();
     tfb.sendTransform(transformStamped);
     rate.sleep();

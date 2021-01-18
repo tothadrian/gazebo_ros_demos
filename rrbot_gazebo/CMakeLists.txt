@@ -9,11 +9,13 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   pcl_conversions
   pcl_ros
+  image_geometry
+  camera_info_manager
 )
 
 # Depend on system install of Gazebo
 find_package(gazebo REQUIRED)
-
+find_package(OpenCV)
 find_package(PCL REQUIRED) # This includes all modules
 find_package(PkgConfig)
 pkg_check_modules(EIGEN3 eigen3 REQUIRED)
@@ -31,6 +33,7 @@ include_directories(
   ${EIGEN3_INCLUDE_DIRS}
   ${PCL_LIBRARY_DIRS}
   ${PCL_DEFINITIONS}
+  ${OpenCV_INCLUDE_DIRS}
   )
 
 catkin_package(
@@ -57,6 +60,9 @@ target_link_libraries(periodic_snapshotter ${catkin_LIBRARIES})
 
 add_executable(pcl_filter src/pcl_filter.cpp)
 target_link_libraries(pcl_filter ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
+add_executable(pc2img src/pc2img.cpp)
+target_link_libraries(pc2img ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
 # target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 # install(TARGETS ${PROJECT_NAME}

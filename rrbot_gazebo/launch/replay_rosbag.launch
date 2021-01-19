@@ -39,8 +39,8 @@
           name="pcl_filter"
           output="screen" >
     <param name="frequency" type="int" value="5" />
-    <param name="source_frame" type="string" value="conveyor_reference" />
-    <param name="target_frame" type="string" value="laser" />
+    <param name="source_frame" type="string" value="laser" />
+    <param name="target_frame" type="string" value="conveyor_reference" />
     <param name="max_dist" type="double" value="2.0" />
   </node>          
 

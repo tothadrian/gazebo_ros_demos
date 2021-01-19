@@ -13,7 +13,6 @@ using namespace std;
 class PointcloudFilter
 {
   public:
-    tf2_ros::Buffer tfBuffer;
     PointcloudFilter(string source_frame, string target_frame, double max_dist)
     {
         // Create a ROS publisher for the output point cloud
@@ -21,6 +20,7 @@ class PointcloudFilter
 
       // Create a ROS subscriber for the input point cloud
       sub_ = nh_.subscribe<pcl::PCLPointCloud2>("assembled_cloud", 1, boost::bind(&PointcloudFilter::process_cloud, this, _1, source_frame, target_frame, max_dist));
+      tf2_ros::TransformListener tfListener(tfBuffer_);
     }
     
     void process_cloud (const pcl::PCLPointCloud2ConstPtr& cloud, std::string source_frame, std::string target_frame, double max_dist)
@@ -31,7 +31,7 @@ class PointcloudFilter
       while (!success){
         
         try{
-          transformStamped = tfBuffer.lookupTransform(source_frame, target_frame, ros::Time(0));
+          transformStamped = tfBuffer_.lookupTransform(source_frame, target_frame, ros::Time(0));
           success=true;
         }
         catch (tf2::TransformException &ex) {
@@ -67,6 +67,7 @@ class PointcloudFilter
       ros::Publisher pub_;
       ros::Subscriber sub_;
       ros::NodeHandle nh_;
+      tf2_ros::Buffer tfBuffer_;
 
 };
 
@@ -82,7 +83,6 @@ int main (int argc, char** argv)
   nh.param<std::string>("pcl_filter/source_frame", source_frame, "base_link");
   nh.param<std::string>("pcl_filter/target_frame", target_frame, "conveyor_reference");
   PointcloudFilter filter(source_frame, target_frame, max_dist);
-  tf2_ros::TransformListener tfListener(filter.tfBuffer);
   // Spin
   ros::spin ();
 }

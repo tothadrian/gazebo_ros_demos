@@ -13,8 +13,8 @@ class ProjectPointcloud
     public:
         ProjectPointcloud(){ 
             cam_info_=ros::topic::waitForMessage<sensor_msgs::CameraInfo>("/rrbot/camera1/camera_info");
-            sub_ = nh_.subscribe<pcl::PCLPointCloud2>("filtered_pc", 1, boost::bind(project_pc, _1, cam_info_));
-            tf2_ros::TransformListener tfListener(tfBuffer_);
+            sub_ = nh_.subscribe<pcl::PCLPointCloud2>("filtered_pc", 1, boost::bind(&ProjectPointcloud::project_pc, this, _1, cam_info_));
+            tfListener_= new tf2_ros::TransformListener(tfBuffer_);
         }
         void project_pc(const pcl::PCLPointCloud2ConstPtr& original_cloud, const sensor_msgs::CameraInfoConstPtr& info_msg)
         {
@@ -36,12 +36,12 @@ class ProjectPointcloud
        ros::Subscriber sub_;
        boost::shared_ptr<sensor_msgs::CameraInfo const> cam_info_;
        tf2_ros::Buffer tfBuffer_;
+       tf2_ros::TransformListener* tfListener_;
 };
 
 int main(int argc,char ** argv)
 {
     ros::init(argc,argv,"pc2img",1);
-    ProjectPointcloud projector;
-    
+    ProjectPointcloud projector; 
     ros::spin();
 }

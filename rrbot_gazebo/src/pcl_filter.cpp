@@ -20,7 +20,7 @@ class PointcloudFilter
 
       // Create a ROS subscriber for the input point cloud
       sub_ = nh_.subscribe<pcl::PCLPointCloud2>("assembled_cloud", 1, boost::bind(&PointcloudFilter::process_cloud, this, _1, source_frame, target_frame, max_dist));
-      tf2_ros::TransformListener tfListener(tfBuffer_);
+      tfListener_= new tf2_ros::TransformListener(tfBuffer_);
     }
     
     void process_cloud (const pcl::PCLPointCloud2ConstPtr& cloud, std::string source_frame, std::string target_frame, double max_dist)
@@ -68,6 +68,7 @@ class PointcloudFilter
       ros::Subscriber sub_;
       ros::NodeHandle nh_;
       tf2_ros::Buffer tfBuffer_;
+      tf2_ros::TransformListener* tfListener_;
 
 };
 

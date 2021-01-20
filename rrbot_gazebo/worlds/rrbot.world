@@ -40,6 +40,10 @@
               <radius>0.03</radius>
             </cylinder>
           </geometry>
+          <material>
+                <ambient>0 0 1 1</ambient>
+                <diffuse>0 0 0 1</diffuse>
+          </material>
         </visual>
       </link>
 
@@ -71,6 +75,10 @@
               <size>.05 .1 .05</size>
             </box>
           </geometry>
+          <material>
+                <ambient>1 0 0 1</ambient>
+                <diffuse>0 0 0 1</diffuse>
+            </material>
         </visual>
       </link>
 
@@ -102,6 +110,10 @@
               <size>.1 .2 .05</size>
             </box>
           </geometry>
+          <material>
+                <ambient>0 1 0 1</ambient>
+                <diffuse>0 0 0 1</diffuse>
+          </material>
         </visual>
       </link>
 

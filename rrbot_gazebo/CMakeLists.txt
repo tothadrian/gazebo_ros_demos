@@ -11,6 +11,10 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
   image_geometry
   camera_info_manager
+  sensor_msgs
+  cv_bridge
+  std_msgs
+  image_transport
 )
 
 # Depend on system install of Gazebo
@@ -40,8 +44,14 @@ catkin_package(
   CATKIN_DEPENDS
     roscpp
     gazebo_ros
-    pcl_conversions
-    pcl_ros
+    #pcl_conversions
+    #pcl_ros
+    #image_geometry
+    #camera_info_manager
+    #sensor_msgs
+    #cv_bridge
+    #std_msgs
+    #image_transport
   LIBRARIES ${PROJECT_NAME}
 )
 
@@ -61,8 +71,9 @@ target_link_libraries(periodic_snapshotter ${catkin_LIBRARIES})
 add_executable(pcl_filter src/pcl_filter.cpp)
 target_link_libraries(pcl_filter ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
-add_executable(pc2img src/pc2img.cpp)
-target_link_libraries(pc2img ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
+add_executable(color_pc src/color_pc.cpp)
+target_link_libraries(color_pc ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
+
 # target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 # install(TARGETS ${PROJECT_NAME}

@@ -72,7 +72,7 @@
     <param name="max_dist" type="double" value="2.0" />
   </node>    
 
-
+   <!--projects the points in the pointcloud to the image frame and colors them accordingly-->
    <node pkg="rrbot_gazebo" type="color_pc"
           name="color_pc"
           output="screen" >

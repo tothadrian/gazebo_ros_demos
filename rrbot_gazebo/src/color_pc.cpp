@@ -32,11 +32,15 @@ class ProjectPointcloud
         void project_pc(const pcl::PCLPointCloud2ConstPtr& original_cloud, const sensor_msgs::CameraInfoConstPtr& info_msg, 
         string source_frame, string target_frame)
         {
+            //Read camera model for projection
             image_geometry::PinholeCameraModel cam_model_;
             cam_model_.fromCameraInfo(info_msg);
+
             PointCloud<PointXYZ>::Ptr aux_cloud(new PointCloud<PointXYZ>);
+            //Convert pcl::pointcloud2 to pointcloud to be able to access individual points
             fromPCLPointCloud2(*original_cloud, *aux_cloud);
 
+            //try to get a transform between the frame of the pointcloud and the camera
             bool success=false;
             geometry_msgs::TransformStamped transformStamped;
             while (!success){
@@ -54,6 +58,8 @@ class ProjectPointcloud
 
             PointCloud<PointXYZ>::Ptr transformed_cloud(new PointCloud<PointXYZ>);
             PointCloud<PointXYZRGB>::Ptr colored_cloud(new PointCloud<PointXYZRGB>);
+
+            //transform cloud to image frame
             pcl_ros::transformPointCloud(*aux_cloud, *transformed_cloud, transformStamped.transform);
             //int cloud_size=aux_cloud->width;
 
@@ -66,11 +72,13 @@ class ProjectPointcloud
             {
             // projection_matrix is the matrix you should use if you don't want to use project3dToPixel() and want to use opencv API
             // cv::Matx34d projection_matrix=cam_model_.fullProjectionMatrix();
+            //project point to image frame and get the pixel coordinates
                 projected_point=cam_model_.project3dToPixel(cv::Point3d(point.x, point.y, point.z) );
                 //cout<<projected_point<<endl;
                 row=round(projected_point.y);
                 col=round(projected_point.x);
 
+                //check for null pointer (this should be done in a more appropriate way) TODO!
                 cv::Mat img;
                 success=false;
                 while (!success){
@@ -85,20 +93,27 @@ class ProjectPointcloud
                     }
 
                 }
+
+                //check if there is color information from the camera for the given point
                 if (row<img.size().height && col<img.size().width)
                 {
+                    //get the point coordinates from the transformed cloud
                     colored_point.x=point.x;
                     colored_point.y=point.y;
                     colored_point.z=point.z;
+                    //get the color values from the image
                     pixel = img.at<cv::Vec3b>(row,col);
                     colored_point.b=pixel[0];
                     colored_point.g=pixel[1];
                     colored_point.r=pixel[2];
+                    //add the point to the new colored cloud
                     colored_cloud->push_back(colored_point);
                 }
             }
             sensor_msgs::PointCloud2 colored_pc;
+            //convert to sensor_msgsPointcloud2 (this might be unnecessery in the future)
             pcl::toROSMsg(*colored_cloud,colored_pc);
+            //write time and frame to the header before publishing
             colored_pc.header.stamp = ros::Time::now();
             colored_pc.header.frame_id = target_frame;
             pub_.publish(colored_pc);
@@ -106,6 +121,7 @@ class ProjectPointcloud
         
         void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         {
+            //this should be synchronized to the pointcloud subscriber, but I couldn't make that work
             try
             {
                 cv_ptr = cv_bridge::toCvCopy(msg, "bgr8");
@@ -132,11 +148,14 @@ int main(int argc,char ** argv)
     ros::NodeHandle nh;
 
     string source_frame, target_frame, camera_topic;
+    //Frames for tf transforms
     nh.param<std::string>("color_pc/source_frame", source_frame, "conveyor_reference");
     nh.param<std::string>("color_pc/target_frame", target_frame, "camera_link_optical");
+    //where the camera publishes its data
     nh.param<std::string>("color_pc/camera_topic", camera_topic, "rrbot/camera1"); 
     ProjectPointcloud projector(source_frame, target_frame, camera_topic);
 
+    //subscribe to image topic using image_transport for conversion to opencv compatible data
     image_transport::ImageTransport it(nh); 
     string image_topic=camera_topic+"/image_raw"; 
     image_transport::Subscriber sub = it.subscribe(image_topic, 1, &ProjectPointcloud::imageCallback, &projector); //rrbot/camera1->belt_camera

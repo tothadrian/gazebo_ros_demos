@@ -9,7 +9,7 @@
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find rrbot_gazebo)/worlds/rrbot.world"/>
+    <arg name="world_name" value="$(find rrbot_gazebo)/worlds/rrbot.world"/> <!--the moving objects are added here. They are moved with model_push.cpp-->
     <arg name="debug" value="$(arg debug)" />
     <arg name="gui" value="$(arg gui)" />
     <arg name="paused" value="$(arg paused)"/>
@@ -41,14 +41,14 @@
     <param name="velocity" type="double" value="0.02" /> <!--velocity of the objects has to be set in the model_push.cpp file-->
   </node>
 
-  <!--median filtering and removing points of conveyor belt-->        
+  <!--median filtering and removing points of conveyor belt (built in ros function)-->        
   <node pkg="laser_filters" type="scan_to_scan_filter_chain"
       name="laser_filter" output="screen">
     <rosparam command="load" file="$(find rrbot_gazebo)/my_laser_filter.yaml" />
     <remap from="scan" to="rrbot/laser/scan" />      
   </node>
 
-  <!--assembles scans in a rolling buffer without publishing it-->
+  <!--assembles scans in a rolling buffer without publishing it (built in ros function)-->
   <node type="laser_scan_assembler" pkg="laser_assembler"
         name="my_assembler">
     <remap from="scan" to="scan_filtered"/>

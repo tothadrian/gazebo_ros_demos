@@ -89,6 +89,7 @@ int main(int argc, char **argv)
   ros::service::waitForService("build_cloud");
   ROS_INFO("Found build_cloud! Starting the snapshotter");
   double duration;
+  //read from parameter server how often the service should be called
   n.param("periodic_snapshotter/duration", duration, 1.0);
   PeriodicSnapshotter snapshotter(duration);
   ros::spin();

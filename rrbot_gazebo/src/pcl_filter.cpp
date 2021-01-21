@@ -28,6 +28,8 @@ class PointcloudFilter
       // ros::Rate rate(10.0);
       bool success=false;
       geometry_msgs::TransformStamped transformStamped;
+
+      //try to get a valid transformation
       while (!success){
         
         try{
@@ -35,7 +37,7 @@ class PointcloudFilter
           success=true;
         }
         catch (tf2::TransformException &ex) {
-          ROS_WARN("%s",ex.what());
+          //ROS_WARN("%s",ex.what());
           success=false;
           ros::Duration(1).sleep();
           continue;
@@ -43,7 +45,7 @@ class PointcloudFilter
       }
 
 
-      // Create filter
+      // Create filter to remove points over a given distance
       pcl::PassThrough<pcl::PCLPointCloud2> pass;
       pass.setInputCloud (cloud);
       pass.setFilterFieldName ("x");
@@ -51,6 +53,7 @@ class PointcloudFilter
       pcl::PCLPointCloud2* pass_filter_output=new pcl::PCLPointCloud2;
       pass.filter (*pass_filter_output);
 
+      //downsample pointcloud to further reduce noise and speed up processing
       pcl::VoxelGrid<pcl::PCLPointCloud2> voxelGrid;
       pcl::PCLPointCloud2ConstPtr cloudPtr(pass_filter_output);
       voxelGrid.setInputCloud(cloudPtr);
@@ -80,7 +83,10 @@ int main (int argc, char** argv)
   std::cout << "Process_pointcloud node initialised" << std::endl;
   std::string source_frame, target_frame;
   double max_dist;
+
+  //read from parameter server how far the last point is allowed to be on the conveyor
   nh.param("pcl_filter/max_dist", max_dist, 2.0);
+  //frame names for tf transforms
   nh.param<std::string>("pcl_filter/source_frame", source_frame, "base_link");
   nh.param<std::string>("pcl_filter/target_frame", target_frame, "conveyor_reference");
   PointcloudFilter filter(source_frame, target_frame, max_dist);

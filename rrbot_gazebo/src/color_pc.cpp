@@ -19,8 +19,11 @@ class ProjectPointcloud
     public:
         cv_bridge::CvImagePtr cv_ptr;
 
-        ProjectPointcloud(string source_frame, string target_frame){ 
-            cam_info_=ros::topic::waitForMessage<sensor_msgs::CameraInfo>("/rrbot/camera1/camera_info");
+        ProjectPointcloud(string source_frame, string target_frame, string camera_topic){ 
+            //boost::shared_ptr<cv_bridge::CvImage>cv_ptr(new cv_bridge::CvImage);
+            string info_topic=camera_topic+"/camera_info";
+            cam_info_=ros::topic::waitForMessage<sensor_msgs::CameraInfo>(info_topic); //rrbot/camera1->belt_camera
+            //cout<<info_topic<<endl;
             sub_ = nh_.subscribe<pcl::PCLPointCloud2>("filtered_pc", 1, boost::bind(&ProjectPointcloud::project_pc, this, _1, cam_info_, source_frame, target_frame));
             tfListener_= new tf2_ros::TransformListener(tfBuffer_);
             pub_ = nh_.advertise<sensor_msgs::PointCloud2> ("colored_pc", 1);
@@ -64,11 +67,25 @@ class ProjectPointcloud
             // projection_matrix is the matrix you should use if you don't want to use project3dToPixel() and want to use opencv API
             // cv::Matx34d projection_matrix=cam_model_.fullProjectionMatrix();
                 projected_point=cam_model_.project3dToPixel(cv::Point3d(point.x, point.y, point.z) );
-                cout<<projected_point<<endl;
+                //cout<<projected_point<<endl;
                 row=round(projected_point.y);
                 col=round(projected_point.x);
-                cv::Mat img=cv_ptr->image;
-                if (img.size().height && col<img.size().width)
+
+                cv::Mat img;
+                success=false;
+                while (!success){
+                    if (cv_ptr){
+                        success=true;
+                        img=cv_ptr->image;
+                    }
+                    else{
+                        success=false;
+                        ros::Duration(1).sleep();
+                        continue;
+                    }
+
+                }
+                if (row<img.size().height && col<img.size().width)
                 {
                     colored_point.x=point.x;
                     colored_point.y=point.y;
@@ -83,7 +100,7 @@ class ProjectPointcloud
             sensor_msgs::PointCloud2 colored_pc;
             pcl::toROSMsg(*colored_cloud,colored_pc);
             colored_pc.header.stamp = ros::Time::now();
-            colored_pc.header.frame_id = "camera_link_optical";
+            colored_pc.header.frame_id = target_frame;
             pub_.publish(colored_pc);
         }
         
@@ -114,14 +131,15 @@ int main(int argc,char ** argv)
     ros::init(argc,argv,"color_pc",1);
     ros::NodeHandle nh;
 
-    string source_frame, target_frame, image_topic;
-    nh.param<std::string>("pc2img/source_frame", source_frame, "conveyor_reference");
-    nh.param<std::string>("pc2img/target_frame", target_frame, "camera_link_optical");
-    nh.param<std::string>("pc2img/image_topic", image_topic, "rrbot/camera1/image_raw");
-    ProjectPointcloud projector(source_frame, target_frame);
+    string source_frame, target_frame, camera_topic;
+    nh.param<std::string>("color_pc/source_frame", source_frame, "conveyor_reference");
+    nh.param<std::string>("color_pc/target_frame", target_frame, "camera_link_optical");
+    nh.param<std::string>("color_pc/camera_topic", camera_topic, "rrbot/camera1"); 
+    ProjectPointcloud projector(source_frame, target_frame, camera_topic);
 
-    image_transport::ImageTransport it(nh);  
-    image_transport::Subscriber sub = it.subscribe(image_topic, 1, &ProjectPointcloud::imageCallback, &projector);
-
+    image_transport::ImageTransport it(nh); 
+    string image_topic=camera_topic+"/image_raw"; 
+    image_transport::Subscriber sub = it.subscribe(image_topic, 1, &ProjectPointcloud::imageCallback, &projector); //rrbot/camera1->belt_camera
+    //cout<<image_topic<<endl;
     ros::spin();
 }

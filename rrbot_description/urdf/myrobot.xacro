@@ -169,11 +169,11 @@
     </collision>
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
       <geometry>
-	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+	<cylinder radius="${camera_link/3}" length="${camera_link/2}"/>
       </geometry>
-      <material name="red"/>
+      <material name="black"/>
     </visual>
 
     <inertial>

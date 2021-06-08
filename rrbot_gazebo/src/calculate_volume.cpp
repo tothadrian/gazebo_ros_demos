@@ -37,7 +37,7 @@ std::vector<ros::Publisher> pub_vec;
         ec.setInputCloud (xyzInputPtr);
         // exctract the indices pertaining to each cluster and store in a vector of pcl::PointIndices
         ec.extract (cluster_indices);
-        cout<<"number of clusters"+cluster_indices.size()<<endl;
+        cout<<"number of clusters: "<<cluster_indices.size()<<endl;
 
         pcl::PCLPointCloud2 outputPCL;
         //Create a publisher for each cluster
@@ -68,6 +68,8 @@ std::vector<ros::Publisher> pub_vec;
             
             // convert to pcl::PCLPointCloud2
             pcl::toPCLPointCloud2( *clusterPtr,outputPCL);
+            outputPCL.header.stamp = input_cloud->header.stamp;
+            outputPCL.header.frame_id = input_cloud->header.frame_id;
             pub_vec[j].publish (outputPCL);
             ++j;
                 }

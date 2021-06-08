@@ -81,6 +81,11 @@
     <param name="camera_topic" type="string" value="rrbot/camera1"/>
   </node>   
    
+    <!--splits up the filtered pointcloud in seperate clusters for every object-->
+  <node pkg="rrbot_gazebo" type="calculate_volume"
+          name="calculate_volume" 
+          output="screen">
+  </node>
 
   <!-- ros_control rrbot launch file -->
   <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->

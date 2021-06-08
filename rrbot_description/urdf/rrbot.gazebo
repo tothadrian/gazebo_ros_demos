@@ -11,7 +11,7 @@
 
   <!-- base_link -->
   <gazebo reference="base_link">
-    <material>Gazebo/Orange</material>
+    <material>Gazebo/Brown</material>
   </gazebo>
 
   <!-- Link2 -->
@@ -25,7 +25,7 @@
   <gazebo reference="link3">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
-    <material>Gazebo/Orange</material>
+    <material>Gazebo/Brown</material>
   </gazebo>
 
   <!-- camera_link -->
@@ -62,7 +62,7 @@
                stddev of 0.01m will put 99.7% of samples within 0.03m of the true
                reading. -->
           <mean>0.0</mean>
-          <stddev>0.01</stddev>
+          <stddev>0.002</stddev>
         </noise>
       </ray>
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">

@@ -17,8 +17,6 @@ using namespace std;
 class ProjectPointcloud
 {
     public:
-        cv_bridge::CvImagePtr cv_ptr;
-
         ProjectPointcloud(string source_frame, string target_frame, string camera_topic){ 
             //boost::shared_ptr<cv_bridge::CvImage>cv_ptr(new cv_bridge::CvImage);
             string info_topic=camera_topic+"/camera_info";
@@ -27,11 +25,16 @@ class ProjectPointcloud
             sub_ = nh_.subscribe<pcl::PCLPointCloud2>("filtered_pc", 1, boost::bind(&ProjectPointcloud::project_pc, this, _1, cam_info_, source_frame, target_frame));
             tfListener_= new tf2_ros::TransformListener(tfBuffer_);
             pub_ = nh_.advertise<sensor_msgs::PointCloud2> ("colored_pc", 1);
+            colored_cloud_ = PointCloud<PointXYZRGB>::Ptr(new PointCloud<PointXYZRGB>);
         }
 
+        cv_bridge::CvImagePtr cv_ptr;
         void project_pc(const pcl::PCLPointCloud2ConstPtr& original_cloud, const sensor_msgs::CameraInfoConstPtr& info_msg, 
         string source_frame, string target_frame)
         {
+            //ROS_WARN_STREAM("received cloud.");
+            //ROS_WARN_STREAM("-------------------------- received cloud. -----------------------------");
+            //ROS_WARN_STREAM("received cloud.");
             //Read camera model for projection
             image_geometry::PinholeCameraModel cam_model_;
             cam_model_.fromCameraInfo(info_msg);
@@ -57,7 +60,7 @@ class ProjectPointcloud
             }
 
             PointCloud<PointXYZ>::Ptr transformed_cloud(new PointCloud<PointXYZ>);
-            PointCloud<PointXYZRGB>::Ptr colored_cloud(new PointCloud<PointXYZRGB>);
+            //ROS_WARN_STREAM("transforming cloud.");
 
             //transform cloud to image frame
             pcl_ros::transformPointCloud(*aux_cloud, *transformed_cloud, transformStamped.transform);
@@ -68,12 +71,23 @@ class ProjectPointcloud
             cv::Vec3b pixel;
             int row, col;
 
-            for (auto const point : transformed_cloud->points)
+            //for (auto const point_idx : indeces(transformed_cloud->points))
+            for (int i = 0; i < aux_cloud->size(); ++i)
             {
+                //ROS_WARN_STREAM("handling point of cloud.");
             // projection_matrix is the matrix you should use if you don't want to use project3dToPixel() and want to use opencv API
             // cv::Matx34d projection_matrix=cam_model_.fullProjectionMatrix();
             //project point to image frame and get the pixel coordinates
-                projected_point=cam_model_.project3dToPixel(cv::Point3d(point.x, point.y, point.z) );
+                if (transformed_cloud->points[i].x > -0.1)
+                {
+                  //ROS_WARN_STREAM("processing point, x was: " << transformed_cloud->points[i].x);
+                }
+                else
+                {
+                  //ROS_ERROR_STREAM("x was: " << transformed_cloud->points[i].x);
+                  continue;
+                }
+                projected_point=cam_model_.project3dToPixel(cv::Point3d(transformed_cloud->points[i].x, transformed_cloud->points[i].y, transformed_cloud->points[i].z) );
                 //cout<<projected_point<<endl;
                 row=round(projected_point.y);
                 col=round(projected_point.x);
@@ -95,27 +109,28 @@ class ProjectPointcloud
                 }
 
                 //check if there is color information from the camera for the given point
-                if (row<img.size().height && col<img.size().width)
+                //ROS_WARN_STREAM("processing point, row: " << row << ", col: " << col);
+                if (row<img.size().height && col<img.size().width && row >= 0 && col >= 0)
                 {
                     //get the point coordinates from the transformed cloud
-                    colored_point.x=point.x;
-                    colored_point.y=point.y;
-                    colored_point.z=point.z;
+                    colored_point.x=aux_cloud->points[i].x;
+                    colored_point.y=aux_cloud->points[i].y;
+                    colored_point.z=aux_cloud->points[i].z;
                     //get the color values from the image
                     pixel = img.at<cv::Vec3b>(row,col);
                     colored_point.b=pixel[0];
                     colored_point.g=pixel[1];
                     colored_point.r=pixel[2];
                     //add the point to the new colored cloud
-                    colored_cloud->push_back(colored_point);
+                    colored_cloud_->push_back(colored_point);
                 }
             }
             sensor_msgs::PointCloud2 colored_pc;
             //convert to sensor_msgsPointcloud2 (this might be unnecessery in the future)
-            pcl::toROSMsg(*colored_cloud,colored_pc);
+            pcl::toROSMsg(*colored_cloud_,colored_pc);
             //write time and frame to the header before publishing
             colored_pc.header.stamp = ros::Time::now();
-            colored_pc.header.frame_id = target_frame;
+            colored_pc.header.frame_id = source_frame;
             pub_.publish(colored_pc);
         }
         
@@ -139,6 +154,7 @@ class ProjectPointcloud
        boost::shared_ptr<sensor_msgs::CameraInfo const> cam_info_;
        tf2_ros::Buffer tfBuffer_;
        tf2_ros::TransformListener* tfListener_;
+       PointCloud<PointXYZRGB>::Ptr colored_cloud_;
        ros::Publisher pub_;
 };
 

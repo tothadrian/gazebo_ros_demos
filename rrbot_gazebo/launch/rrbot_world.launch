@@ -85,6 +85,8 @@
   <node pkg="rrbot_gazebo" type="calculate_volume"
           name="calculate_volume" 
           output="screen">
+    <param name="pc_topic" type="string" value="colored_pc" />
+    <param name="conveyor_height" type="double" value="0.0"/>
   </node>
 
   <!-- ros_control rrbot launch file -->

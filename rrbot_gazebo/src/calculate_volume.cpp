@@ -15,6 +15,8 @@ using namespace std;
 
 ros::NodeHandle* nhPtr; 
 std::vector<ros::Publisher> pub_vec;
+double conveyor_height;
+string pc_topic;
 
 
     void segment_objects(const PCLPointCloud2ConstPtr& input_cloud)
@@ -79,7 +81,9 @@ int main(int argc,char ** argv)
 {
     ros::init(argc,argv,"calculate_volume",1);
     ros::NodeHandle nh;
-    ros::Subscriber sub=nh.subscribe<PCLPointCloud2>("colored_pc", 1, segment_objects);
+    nh.param("calculate_volume/conveyor_height", conveyor_height, 0.0);
+    nh.param<string>("calculate_volume/pc_topic", pc_topic, "colored_pc");
+    ros::Subscriber sub=nh.subscribe<PCLPointCloud2>(pc_topic, 1, segment_objects);
     nhPtr = & nh; 
     ros::spin();
 }

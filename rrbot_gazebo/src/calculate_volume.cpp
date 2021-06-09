@@ -9,6 +9,7 @@
 #include <pcl/kdtree/kdtree.h>
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/common/centroid.h>
+#include <pcl/common/common.h>
 
 
 using namespace pcl;
@@ -23,6 +24,7 @@ struct object_cluster{
     double centroid_x;
     double centroid_y;
     double centroid_z;
+    double volume;
 };
 
     bool sortX(object_cluster a, object_cluster b){
@@ -72,6 +74,10 @@ struct object_cluster{
             pcl::PointCloud<pcl::PointXYZRGB>::Ptr clusterPtr (cluster);
             CentroidPoint<pcl::PointXYZ> centroid;
             PointXYZ centroid_coords;
+            
+            double min=100;
+            double max=-100;
+            double volume;
 
             objects[j].Ptr=clusterPtr;
 
@@ -79,20 +85,32 @@ struct object_cluster{
             // Assign each point corresponding to this cluster in xyzCloudPtrPassthroughFiltered a specific color for identification purposes
             for (std::vector<int>::const_iterator pit = it->indices.begin (); pit != it->indices.end (); ++pit)
             {
+                //because centroid needs const points
                 const PointXYZ temp_point(xyzInputPtr->points[*pit].x,xyzInputPtr->points[*pit].y,xyzInputPtr->points[*pit].z);
-                
-                xyzInputPtr->points[*pit].r=255;
-                xyzInputPtr->points[*pit].g=0;
-                xyzInputPtr->points[*pit].b=0;
                 centroid.add(temp_point);
+
+                //find min-max dimension in y 
+                if (xyzInputPtr->points[*pit].y<min)
+                    min=xyzInputPtr->points[*pit].y;
+                else if (xyzInputPtr->points[*pit].y>max)
+                    max=xyzInputPtr->points[*pit].y;
+
+/*                 xyzInputPtr->points[*pit].r=255;
+                xyzInputPtr->points[*pit].g=0;
+                xyzInputPtr->points[*pit].b=0; */
+                
                 clusterPtr->points.push_back(xyzInputPtr->points[*pit]);
             } 
             
+            
+
             //get centroid coordinates and store in structure
             centroid.get(centroid_coords);
             objects[j].centroid_x=centroid_coords.x;
             objects[j].centroid_y=centroid_coords.y;
             objects[j].centroid_z=centroid_coords.z;
+
+            objects[j].volume=(centroid_coords.z-conveyor_height)*(max-min)*1.2;
 
             /* pcl::toPCLPointCloud2(*objects[j].Ptr,outputPCL);
             outputPCL.header.stamp = input_cloud->header.stamp;
@@ -103,6 +121,7 @@ struct object_cluster{
 
         sort(objects, objects+cluster_indices.size(), sortX);
 
+
         for (int i = 0; i < cluster_indices.size(); i++)
         {
             // convert to pcl::PCLPointCloud2
@@ -110,7 +129,7 @@ struct object_cluster{
             outputPCL.header.stamp = input_cloud->header.stamp;
             outputPCL.header.frame_id = input_cloud->header.frame_id;
             pub_vec[i].publish (outputPCL);
-            cout<<"cluster"<<i<<" coordinates:"<<objects[i].centroid_x<<", "<<objects[i].centroid_y<<", "<<objects[i].centroid_z<<endl;
+            cout<<"cluster"<<i<<" coordinates:"<<objects[i].centroid_x<<", "<<objects[i].centroid_y<<", "<<objects[i].centroid_z<<" volume: "<<objects[i].volume<<endl;
         }
         
     }

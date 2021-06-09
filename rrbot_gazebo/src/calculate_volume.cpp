@@ -8,6 +8,7 @@
 // #include <pcl_ros/transforms.h>
 #include <pcl/kdtree/kdtree.h>
 #include <pcl/segmentation/extract_clusters.h>
+#include <pcl/common/centroid.h>
 
 
 using namespace pcl;
@@ -17,6 +18,16 @@ ros::NodeHandle* nhPtr;
 std::vector<ros::Publisher> pub_vec;
 double conveyor_height;
 string pc_topic;
+struct object_cluster{
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr Ptr; 
+    double centroid_x;
+    double centroid_y;
+    double centroid_z;
+};
+
+    bool sortY(object_cluster a, object_cluster b){
+        return a.centroid_y>=b.centroid_y;
+    }
 
 
     void segment_objects(const PCLPointCloud2ConstPtr& input_cloud)
@@ -41,11 +52,15 @@ string pc_topic;
         ec.extract (cluster_indices);
         cout<<"number of clusters: "<<cluster_indices.size()<<endl;
 
+        struct object_cluster objects[cluster_indices.size()];
+        
+        
+
         pcl::PCLPointCloud2 outputPCL;
         //Create a publisher for each cluster
         for (int i = 0; i < cluster_indices.size(); ++i)
         {
-            std::string topicName = "/pcl_cluster" + boost::lexical_cast<std::string>(i);
+            std::string topicName = "pc_clusters/cluster" + boost::lexical_cast<std::string>(i);
             ros::Publisher pub = nhPtr->advertise<sensor_msgs::PointCloud2> (topicName, 1);
             pub_vec.push_back(pub);
         }
@@ -57,24 +72,41 @@ string pc_topic;
            // create a pcl object to hold the extracted cluster
             pcl::PointCloud<pcl::PointXYZRGB> *cluster = new pcl::PointCloud<pcl::PointXYZRGB>;
             pcl::PointCloud<pcl::PointXYZRGB>::Ptr clusterPtr (cluster);
+            CentroidPoint<pcl::PointXYZ> centroid;
+            PointXYZ centroid_coords;
+
+            objects[j].Ptr=clusterPtr;
 
             // now we are in a vector of indices pertaining to a single cluster.
             // Assign each point corresponding to this cluster in xyzCloudPtrPassthroughFiltered a specific color for identification purposes
             for (std::vector<int>::const_iterator pit = it->indices.begin (); pit != it->indices.end (); ++pit)
             {
+                const PointXYZ temp_point(xyzInputPtr->points[*pit].x,xyzInputPtr->points[*pit].y,xyzInputPtr->points[*pit].z);
+                
                 xyzInputPtr->points[*pit].r=255;
                 xyzInputPtr->points[*pit].g=0;
                 xyzInputPtr->points[*pit].b=0;
+                centroid.add(temp_point);
                 clusterPtr->points.push_back(xyzInputPtr->points[*pit]);
             } 
             
             // convert to pcl::PCLPointCloud2
-            pcl::toPCLPointCloud2( *clusterPtr,outputPCL);
+
+            centroid.get(centroid_coords);
+            objects[j].centroid_x=centroid_coords.x;
+            objects[j].centroid_y=centroid_coords.y;
+            objects[j].centroid_z=centroid_coords.z;
+            sort(objects, objects+cluster_indices.size(), sortY);
+        }
+
+        for (int i = 0; i < cluster_indices.size(); i++)
+        {
+            pcl::toPCLPointCloud2(*objects[i].Ptr,outputPCL);
             outputPCL.header.stamp = input_cloud->header.stamp;
             outputPCL.header.frame_id = input_cloud->header.frame_id;
-            pub_vec[j].publish (outputPCL);
-            ++j;
-                }
+            pub_vec[i].publish (outputPCL);
+        }
+        
     }
 
 int main(int argc,char ** argv)

@@ -25,8 +25,8 @@ struct object_cluster{
     double centroid_z;
 };
 
-    bool sortY(object_cluster a, object_cluster b){
-        return a.centroid_y>=b.centroid_y;
+    bool sortX(object_cluster a, object_cluster b){
+        return a.centroid_x>=b.centroid_x;
     }
 
 
@@ -53,10 +53,8 @@ struct object_cluster{
         cout<<"number of clusters: "<<cluster_indices.size()<<endl;
 
         struct object_cluster objects[cluster_indices.size()];
-        
-        
-
         pcl::PCLPointCloud2 outputPCL;
+
         //Create a publisher for each cluster
         for (int i = 0; i < cluster_indices.size(); ++i)
         {
@@ -90,21 +88,29 @@ struct object_cluster{
                 clusterPtr->points.push_back(xyzInputPtr->points[*pit]);
             } 
             
-            // convert to pcl::PCLPointCloud2
-
+            //get centroid coordinates and store in structure
             centroid.get(centroid_coords);
             objects[j].centroid_x=centroid_coords.x;
             objects[j].centroid_y=centroid_coords.y;
             objects[j].centroid_z=centroid_coords.z;
-            sort(objects, objects+cluster_indices.size(), sortY);
+
+            /* pcl::toPCLPointCloud2(*objects[j].Ptr,outputPCL);
+            outputPCL.header.stamp = input_cloud->header.stamp;
+            outputPCL.header.frame_id = input_cloud->header.frame_id;
+            pub_vec[j].publish (outputPCL); */
+            ++j;
         }
+
+        sort(objects, objects+cluster_indices.size(), sortX);
 
         for (int i = 0; i < cluster_indices.size(); i++)
         {
+            // convert to pcl::PCLPointCloud2
             pcl::toPCLPointCloud2(*objects[i].Ptr,outputPCL);
             outputPCL.header.stamp = input_cloud->header.stamp;
             outputPCL.header.frame_id = input_cloud->header.frame_id;
             pub_vec[i].publish (outputPCL);
+            cout<<"cluster"<<i<<" coordinates:"<<objects[i].centroid_x<<", "<<objects[i].centroid_y<<", "<<objects[i].centroid_z<<endl;
         }
         
     }

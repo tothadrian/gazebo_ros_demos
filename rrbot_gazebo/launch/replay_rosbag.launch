@@ -14,7 +14,7 @@
   <!--start RVIZ-->
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find rrbot_gazebo)/rviz/rosbag_config.rviz" />
 
-  <!--median filtering and removing points of conveyor belt-->        
+    <!--median filtering and removing points of conveyor belt-->        
   <node pkg="laser_filters" type="scan_to_scan_filter_chain"
       name="laser_filter" output="screen">
     <rosparam command="load" file="$(find rrbot_gazebo)/my_laser_filter.yaml" />

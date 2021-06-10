@@ -74,9 +74,6 @@ target_link_libraries(pcl_filter ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 add_executable(color_pc src/color_pc.cpp)
 target_link_libraries(color_pc ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
 
-add_executable(calculate_volume src/calculate_volume.cpp)
-target_link_libraries(calculate_volume ${catkin_LIBRARIES} ${PCL_LIBRARIES})
-
 # target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 # install(TARGETS ${PROJECT_NAME}

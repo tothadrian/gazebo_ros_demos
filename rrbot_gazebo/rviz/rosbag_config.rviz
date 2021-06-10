@@ -10,11 +10,10 @@ Panels:
         - /PointCloud21
         - /PointCloud22
         - /TF1
-        - /TF1/Frames1
         - /Image1
         - /PointCloud23
       Splitter Ratio: 0.5235294103622437
-    Tree Height: 429
+    Tree Height: 407
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -33,7 +32,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Image
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -71,7 +70,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 0
@@ -88,7 +87,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -101,10 +100,10 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 0
+      Max Intensity: 243
       Min Color: 0; 0; 0
       Min Intensity: 0
       Name: PointCloud2
@@ -118,7 +117,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -150,10 +149,88 @@ Visualization Manager:
       Use rainbow: true
       Value: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        BLUE:
+          Value: false
+        GREEN:
+          Value: false
+        ORANGE:
+          Value: false
+        RED:
+          Value: false
+        YELLOW:
+          Value: false
+        aa0:
+          Value: false
+        aa2:
+          Value: false
+        aa3:
+          Value: false
+        aa4:
+          Value: false
+        aa5:
+          Value: false
+        aaa0:
+          Value: false
+        base:
+          Value: false
+        base_link:
+          Value: false
+        box_1:
+          Value: false
+        box_2:
+          Value: false
+        box_3:
+          Value: false
+        box_4:
+          Value: false
+        box_5:
+          Value: false
+        box_end:
+          Value: false
+        camera:
+          Value: false
+        coincell1:
+          Value: false
+        conveyor_belt:
+          Value: false
+        conveyor_reference:
+          Value: true
+        laser:
+          Value: false
+        link_1:
+          Value: false
+        link_2:
+          Value: false
+        link_3:
+          Value: false
+        link_4:
+          Value: false
+        link_5:
+          Value: false
+        link_6:
+          Value: false
+        table:
+          Value: false
+        target_1:
+          Value: false
+        target_2:
+          Value: false
+        tool0:
+          Value: false
+        vacuum:
+          Value: false
+        waiting_pose:
+          Value: false
+        workspace_max:
+          Value: false
+        workspace_min:
+          Value: false
+        world:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -161,9 +238,71 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        world:
+          BLUE:
+            {}
+          GREEN:
+            {}
+          ORANGE:
+            {}
+          RED:
+            {}
+          YELLOW:
+            {}
+          box_1:
+            box_2:
+              box_3:
+                {}
+            box_4:
+              box_5:
+                {}
+          box_end:
+            {}
+          conveyor_belt:
+            conveyor_reference:
+              aa0:
+                {}
+              aa2:
+                {}
+              aa3:
+                {}
+              aa4:
+                {}
+              aa5:
+                {}
+              aaa0:
+                {}
+              coincell1:
+                {}
+          laser:
+            {}
+          table:
+            base_link:
+              base:
+                {}
+              link_1:
+                link_2:
+                  link_3:
+                    link_4:
+                      link_5:
+                        link_6:
+                          tool0:
+                            vacuum:
+                              {}
+            camera:
+              {}
+          target_1:
+            {}
+          target_2:
+            {}
+          waiting_pose:
+            {}
+          workspace_max:
+            {}
+          workspace_min:
+            {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Class: rviz/Image
       Enabled: true
       Image Topic: /belt_camera/image_raw
@@ -188,7 +327,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -205,7 +344,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -234,7 +373,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.0012380164116621017
+      Distance: 0.0025419462472200394
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -250,19 +389,19 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.2153980731964111
+      Pitch: 1.3153977394104004
       Target Frame: <Fixed Frame>
-      Yaw: 3.2354109287261963
+      Yaw: 3.120401382446289
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 948
+  Height: 918
   Hide Left Dock: false
   Hide Right Dock: false
   Image:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000018400000316fc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d00000238000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d0065007200610000000231000000bc0000000000000000fb0000000a0049006d006100670065010000027b000000d80000001600ffffff000000010000010f00000316fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003d00000316000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007800000003efc0100000002fb0000000800540069006d0065010000000000000780000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000004e10000031600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd000000040000000000000184000002f8fc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d00000222000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d0065007200610000000231000000bc0000000000000000fb0000000a0049006d0061006700650100000265000000d00000001600ffffff000000010000010f000002f8fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003d000002f8000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000006900000003efc0100000002fb0000000800540069006d0065010000000000000690000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000003f1000002f800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -271,6 +410,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1920
-  X: 1680
-  Y: 215
+  Width: 1680
+  X: 1920
+  Y: 27

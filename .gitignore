@@ -2,6 +2,7 @@
 .#*
 
 rrbot_gazebo/workspace.code-workspace
+rrbot_gazebo/src/old_calculate_volume.cpp
 
 # Allow user to enable or disable this w/o changing repo
 rrbot_gazebo_plugins/CATKIN_IGNORE
